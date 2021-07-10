@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>登录</title>
+    <meta name="author" content="DeathGhost"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css" tppabs="css/style.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        body {
+            height: 100%;
+            background: #16a085;
+            overflow: hidden;
+        }
+
+        canvas {
+            z-index: -1;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+<dl class="admin_login" id="app" style="width: 20%">
+    <dt style="color: #fff">
+        <strong>毕业设计后台管理系统</strong>
+        <em>Graduation Design Management System</em>
+    </dt>
+    <dd class="user_icon">
+        <input type="text" placeholder="教工号" class="login_txtbx" id="usernum" v-model="usernum" />
+    </dd>
+    <dd class="pwd_icon">
+        <input type="password" placeholder="密码" class="login_txtbx" id="password" v-model="password" />
+    </dd>
+    <dd>
+        <input type="button" value="立即登陆" class="submit_btn" @click="login" />
+    </dd>
+    <div style="float: right;">
+        <a href="../Register/register.html" style='color: white'>无账号？去注册</a>
+    </div>
+    <dd>
+</dl>
+
+<script src="js/jquery.js"></script>
+<script src="js/verificationNumbers.js" tppabs="js/verificationNumbers.js"></script>
+<script src="js/Particleground.js" tppabs="js/Particleground.js"></script>
+<script src="../Plug/js/vue.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="../Common/js/global.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    $(document).ready(function () {
+        //粒子背景特效
+        $('body').particleground({
+            dotColor: '#5cbdaa',
+            lineColor: '#5cbdaa'
+        });
+    });
+
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            usernum:'',
+            password:'',
+        },
+        methods:{
+            //登录
+            login() {
+                if(this.usernum.trim() === '' || this.password.trim() === ''){
+                    alert("输入不为空")
+                    return
+                }
+
+                let checkUsernum = /^\d{10}$/
+                if(!checkUsernum.test(this.usernum.trim())){
+                    alert('请输入正确格式的教工号！')
+                    return
+                }
+
+                let checkPassword = /^[0-9A-Za-z]{6,}$/
+                if(!checkPassword.test(this.password.trim())){
+                    alert('密码错误，密码至少为6位，可由数字和字母组成！')
+                    return
+                }
+
+                //使用URLSearchParams将数据转成formatData格式传给后端
+                let perData = new URLSearchParams()
+                perData.append("usernum",this.usernum)
+                perData.append("password",this.password)
+                //console.log(perData)
+                var loginUrl = rootPath + '/login'
+                axios.post(loginUrl,perData).then(res => {
+                    console.log(res)
+                    if(res.data.code === 200){
+                        //console.log(res.data.data)
+                        console.log("wozenmzhidao")
+
+                        //管理员身份token
+                        let admiToken = res.data.data.token
+                        window.localStorage.setItem("admiToken",admiToken)
+
+                        //管理员userId
+                        let admiId = res.data.data.userId
+                        window.localStorage.setItem("admiId",admiId)
+
+                        // 跳转到首页
+                        location.href = "../Index/index.html"
+
+                    }else{
+                        alert(res.data.message)
+                    }
+                }).catch(error => {
+                    console.log('请求失败' + error)
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,389 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="app">
+<head>
+    <meta charset="utf-8"/>
+    <title>后台系统-过程文档管理：指导记录</title>
+    <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="stylesheet" href="../Plug/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../Common/css/app.v2.css" type="text/css"/>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+
+</head>
+<body>
+<section class="vbox" id="app">
+    <!--navbar-->
+    <header class="bg-dark dk header navbar navbar-fixed-top-xs">
+        <div class="navbar-header aside-md">
+            <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav">
+                <i class="fa fa-bars"></i>
+            </a>
+            <a href="#" class="navbar-brand" data-toggle="fullscreen">
+                <img src="../images/logo.png" class="m-r-smv">
+                毕设后台管理
+            </a>
+            <a class="btn btn-link visible-xs" data-toggle="dropdown" data-target=".nav-user">
+                <i class="fa fa-cog"></i>
+            </a>
+        </div>
+        <ul class="nav navbar-nav hidden-xs">
+        </ul>
+        <ul class="nav navbar-nav navbar-right hidden-xs nav-user">
+            <li class="dropdown" style="margin-right: 20px">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="thumb-sm avatar pull-left">
+                        <img :src="imgUrl?imgUrl:'../images/avatar.jpg'" style="width: 35px;height: 35px" />
+                    </span>
+                     {{admiNum + admiName}}
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu animated fadeInRight">
+                    <span class="arrow top"></span>
+                    <li>
+                        <a href="../PersonInfo/personInfo.html"><i class="fa fa-gear"></i>  个人信息</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li @click="signOut"><a href="#"><i class="fa fa-sign-out"></i>   退出</a></li>
+                </ul>
+            </li>
+        </ul>
+    </header>
+    <!-- navbar end   -->
+
+    <!--content-->
+    <section>
+        <section class="hbox stretch">
+            <!-- .aside -->
+            <aside class="bg-light lter aside-md hidden-print" id="nav">
+                <section class="vbox">
+                    <header class="header bg-primary lter text-center clearfix">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-dark btn-icon" title="New project">
+                                <i class="fa fa-bars"></i></button>
+                            <div class="btn-group hidden-nav-xs">
+                                <button type="button" class="btn btn-sm btn-primary dropdown-toggle">
+                                    综合管理
+                                    <!--<span class="caret"></span>-->
+                                </button>
+                                <!--<ul class="dropdown-menu text-left">
+                                    <li><a href="#">Project</a></li>
+                                    <li><a href="#">Another Project</a></li>
+                                    <li><a href="#">More Projects</a></li>
+                                </ul>-->
+                            </div>
+                        </div>
+                    </header>
+                    <section class="w-f scrollable">
+                        <div class="slim-scroll" data-height="auto" data-disable-fade-out="true" data-distance="0" data-size="5px" data-color="#333333"> <!-- nav -->
+                            <nav class="nav-primary hidden-xs">
+                                <ul class="nav">
+                                    <!--aside nav-->
+                                    <li>
+                                        <a href="../Home/home.html" >
+                                            <i class="fa fa-home icon"><b class="bg-success"></b></i>
+                                            <span>首页</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-id-card  icon"><b class="bg-warning"></b></i>
+                                            <span class="pull-right">
+                                                <i class="fa fa-angle-down text"></i>
+                                                <i class="fa fa-angle-up text-active"></i>
+                                            </span>
+                                            <span>账号管理</span>
+                                        </a>
+                                        <ul class="nav lt">
+                                            <li>
+                                                <a href="../AccountManagement/teachAccount.html">
+                                                    <i class="fa fa-angle-right"></i>
+                                                    <span>教师账号</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="../AccountManagement/stuAccount.html">
+                                                    <i class="fa fa-angle-right"></i>
+                                                    <span>学生账号</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="../Title/title.html">
+                                            <i class="fa fa-check-square-o icon"><b class="bg-danger"></b></i>
+                                            <span>审题模块</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="../ChooseTitle/chooseTitle.html" >
+                                            <i class="fa fa-cube icon"><b class="bg-info"></b></i>
+                                            <span>选题管理</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="../TaskCheck/task.html">
+                                            <i class="fa fa-book icon"><b class="bg-primary"></b></i>
+                                            <span>任务书审核</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="../StartDefence/startDefence.html" >
+                                            <i class="fa fa-star icon"><b class="bg-success"></b></i>
+                                            <span>开题答辩</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="active">
+                                        <a href="#">
+                                            <i class="fa fa-file-text-o  icon"><b class="bg-warning"></b></i>
+                                            <span class="pull-right">
+                                                <i class="fa fa-angle-down text"></i>
+                                                <i class="fa fa-angle-up text-active"></i>
+                                            </span>
+                                            <span>过程文档管理</span>
+                                        </a>
+                                        <ul class="nav lt">
+                                            <li>
+                                                <a href="../ProcessDoc/StartFile.html">
+                                                    <i class="fa fa-angle-right"></i>
+                                                    <span>开题报告</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="../ProcessDoc/MiddleFile.html">
+                                                    <i class="fa fa-angle-right"></i>
+                                                    <span>中期检查</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="../ProcessDoc/PlanFile.html">
+                                                    <i class="fa fa-angle-right"></i>
+                                                    <span>进度计划</span>
+                                                </a>
+                                            </li>
+                                            <li class="active">
+                                                <a href="GuidanceFile.html">
+                                                    <i class="fa fa-angle-right"></i>
+                                                    <span>指导记录</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="../ProcessDoc/TranslationFile.html">
+                                                    <i class="fa fa-angle-right"></i>
+                                                    <span>外文译文</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="../ProcessDoc/OriginalFile.html">
+                                                    <i class="fa fa-angle-right"></i>
+                                                    <span>外文原文</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="../ProcessDoc/LiteratureFile.html">
+                                                    <i class="fa fa-angle-right"></i>
+                                                    <span>文献综述</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="../ProcessDoc/ThesisFile.html">
+                                                    <i class="fa fa-angle-right"></i>
+                                                    <span>毕业论文</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <a href="../DefenceGroup/defGroup.html">
+                                            <i class="fa fa-window-restore icon"><b class="bg-primary dker"></b> </i>
+                                            <span>毕设答辩</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="../ScoreInput/scoInput.html">
+                                            <i class="fa fa-pencil icon"><b class="bg-info"></b></i>
+                                            <span>成绩管理</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <!-- / nav -->
+                        </div>
+                    </section>
+                    <footer class="footer lt hidden-xs b-t b-light">
+                        <div id="chat" class="dropup">
+                            <section class="dropdown-menu on aside-md m-l-n">
+                                <section class="panel bg-white">
+                                    <header class="panel-heading b-b b-light">Active chats</header>
+                                    <div class="panel-body animated fadeInRight">
+                                        <p class="text-sm">No active chats.</p>
+                                        <p><a href="#" class="btn btn-sm btn-default">Start a chat</a></p>
+                                    </div>
+                                </section>
+                            </section>
+                        </div>
+                        <div id="invite" class="dropup">
+                            <section class="dropdown-menu on aside-md m-l-n">
+                                <section class="panel bg-white">
+                                    <header class="panel-heading b-b b-light">
+                                        John <i class="fa fa-circle text-success"></i>
+                                    </header>
+                                    <div class="panel-body animated fadeInRight">
+                                        <p class="text-sm">No contacts in your lists.</p>
+                                        <p>
+                                            <a href="#" class="btn btn-sm btn-facebook">
+                                                <i class="fa fa-fw fa-facebook"></i> Invite from Facebook
+                                            </a>
+                                        </p>
+                                    </div>
+                                </section>
+                            </section>
+                        </div>
+                        <a href="#nav" data-toggle="class:nav-xs" class="pull-right btn btn-sm btn-default btn-icon">
+                            <i class="fa fa-angle-left text"></i>
+                            <i class="fa fa-angle-right text-active"></i>
+                        </a>
+                        <div class="btn-group hidden-nav-xs">
+                            <button type="button" title="Chats" class="btn btn-icon btn-sm btn-default" data-toggle="dropdown" data-target="#chat">
+                                <i class="fa fa-comment-o"></i>
+                            </button>
+                            <button type="button" title="Contacts" class="btn btn-icon btn-sm btn-default" data-toggle="dropdown" data-target="#invite">
+                                <i class="fa fa-facebook"></i>
+                            </button>
+                        </div>
+                    </footer>
+                </section>
+            </aside>
+            <!-- /.aside -->
+
+            <!--container-->
+            <section id="content">
+                <section class="vbox">
+                    <section class="scrollable padder">
+                        <ul class="breadcrumb no-border no-radius b-b b-light pull-in">
+                            <li>
+                                <a href="../Home/home.html"><i class="fa fa-home"></i> 首页</a>
+                            </li>
+                            <li class="active">指导记录</li>
+                        </ul>
+                        <div class="m-b-md">
+                            <h3 class="m-b-none">指导记录模块</h3>
+                            <small>Welcome back, Noteman</small>
+                        </div>
+                        <!--content start-->
+                        <section class="panel panel-default" style="padding: 10px">
+                            <el-input  placeholder="请输入学号/姓名" v-model="searchValue" clearable @clear="clearBtn" prefix-icon="el-icon-search" style="width: 18%"></el-input>
+                            <el-button type="primary" icon="el-icon-search" @click="searchBtn" style="margin-left: 10px">查询</el-button>
+                            <el-button type="success" style="float: right" @click="guidanceGraphic">信息统计</el-button>
+                            <el-button type="warning" style="float: right" @click="exportGuidance">导出文件</el-button>
+                            <el-row style="margin-top: 10px">
+                                <el-card v-if="guidanceList.length === 0" class="box-card" style="text-align: center">暂无数据</el-card>
+                                <el-table v-else border :data="guidanceList">
+                                    <el-table-column type="index" prop="checkbox" ></el-table-column>
+                                    <el-table-column label="学生" prop="username"></el-table-column>
+                                    <el-table-column label="题目" prop="titleName"></el-table-column>
+                                    <el-table-column label="专业" prop="major"></el-table-column>
+                                    <el-table-column label="指导教师" prop="teachName"></el-table-column>
+                                    <el-table-column label="提交次数" prop="count"></el-table-column>
+                                    <el-table-column label="操作" width="80px">
+                                        <template slot-scope="scope">
+                                            <el-tooltip content="查看详情" placement="bottom">
+                                                <el-button size="mini" type="primary" icon="el-icon-zoom-in" @click="toGuiDetail(scope.$index,scope.row)"></el-button>
+                                            </el-tooltip>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </el-row>
+                            <!--pageNation-->
+                            <el-row style="margin-top: 10px">
+                                <el-pagination
+                                        style="float: right"
+                                        @current-change="handleCurrentChange"
+                                        :current-page="currentPage"
+                                        :page-sizes="[20]"
+                                        :page-size="20"
+                                        layout="sizes, prev, pager, next, jumper"
+                                        :total="totals"
+                                ></el-pagination>
+                            </el-row>
+                            <!--信息统计弹窗-->
+                            <el-dialog title="指导记录信息统计" :visible.sync="graphicDialog" center width="60%">
+                                <el-row :gutter="20">
+                                    <el-col :span="8">
+                                        <el-card style="width:100%;margin-top: 20px;background-color: #5470C6;color: #ffffff">
+                                            <el-row>
+                                                <el-col :span="8">
+                                                    <div>
+                                                        <i class="fa fa-users fa-3x"></i>
+                                                    </div>
+                                                </el-col>
+                                                <el-col :span="16">
+                                                    <div>
+                                                        <el-row>学生总人数：</el-row>
+                                                        <el-row>
+                                                            <strong style="font-size: 18px">{{stuNum}}</strong>
+                                                        </el-row>
+                                                    </div>
+                                                </el-col>
+                                            </el-row>
+                                        </el-card>
+                                        <el-card style="width:100%;margin-top: 20px;color: #ffffff;background-color: #91CC75">
+                                            <el-row>
+                                                <el-col :span="8">
+                                                    <div>
+                                                        <i class="fa fa-check-square fa-3x"></i>
+                                                    </div>
+                                                </el-col>
+                                                <el-col :span="16">
+                                                    <div>
+                                                        <el-row>提交人数：</el-row>
+                                                        <el-row>
+                                                            <strong style="font-size: 18px">{{guidanceNum}}</strong>
+                                                        </el-row>
+                                                    </div>
+                                                </el-col>
+                                            </el-row>
+                                        </el-card>
+                                        <el-card style="width:100%;margin-top: 20px;color: #ffffff;background-color: #FAC858">
+                                            <el-row>
+                                                <el-col :span="8">
+                                                    <div>
+                                                        <i class="fa fa-times-rectangle fa-3x"></i>
+                                                    </div>
+                                                </el-col>
+                                                <el-col :span="16">
+                                                    <div>
+                                                        <el-row>未提交人数：</el-row>
+                                                        <el-row>
+                                                            <strong style="font-size: 18px">{{unSubmit}}</strong>
+                                                        </el-row>
+                                                    </div>
+                                                </el-col>
+                                            </el-row>
+                                        </el-card>
+                                    </el-col>
+                                    <el-col :span="16">
+                                        <div id="echartsMain" style="width:100%;height:400px;"></div>
+                                    </el-col>
+                                </el-row>
+                            </el-dialog>
+                        </section>
+                    </section>
+                </section>
+                <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
+            </section>
+            <!--container end-->
+        </section>
+    </section>
+    <!--content end-->
+</section>
+<script src="../Common/js/app.v2.js"></script>
+<script src="../Plug/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../Plug/js/vue.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.1.1/dist/echarts.min.js"></script>
+<script src="js/guidanceFile.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

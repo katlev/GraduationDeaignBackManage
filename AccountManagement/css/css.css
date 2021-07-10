@@ -1,0 +1,19 @@
+.upload-demo{
+    width: 98px;
+    height: 40px;
+    overflow: hidden;
+    position: relative;
+    float: right;
+}
+.upload-demo .el-upload{
+    cursor: pointer;
+    position: relative;
+    width: 98px;
+    height: 40px;
+    overflow: hidden;
+}
+.upload-demo input{
+    /*visibility: hidden;
+    position: absolute;*/
+    display: none;
+}

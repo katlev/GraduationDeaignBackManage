@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>后台系统-个人信息</title>
+    <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="stylesheet" href="../Plug/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../Common/css/app.v2.css" type="text/css"/>
+    <link rel="stylesheet" href="../Plug/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="css/personInfo.css">
+</head>
+<body>
+<div id="PersonMsg">
+    <section class="vbox">
+        <!--navbar-->
+        <header class="bg-dark dk header navbar navbar-fixed-top navbar-fixed-top-xs">
+            <div class="navbar-header aside-md">
+                <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav">
+                    <i class="fa fa-bars"></i>
+                </a>
+                <a href="#" class="navbar-brand" data-toggle="fullscreen" style="padding:10px 15px;margin-top: 2px">
+                    <img src="../images/logo.png" class="m-r-smv" style="display: inline-block;">
+                    毕设后台管理
+                </a>
+                <a class="btn btn-link visible-xs" data-toggle="dropdown" data-target=".nav-user">
+                    <i class="fa fa-cog"></i>
+                </a>
+            </div>
+
+            <ul class="nav navbar-nav hidden-xs">
+                <li class="dropdown">
+                    <a href="../Home/home.html" class=" dker">
+                        <i class="fa fa-home"></i>
+                        <span class="font-bold">首页</span>
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs nav-user">
+                <li class="dropdown" style="margin-right: 20px">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="thumb-sm avatar pull-left">
+                        <img :src="imageUrl ? imageUrl : '../images/avatar.jpg'" style="width: 35px;height: 35px" />
+                    </span>
+                        {{admiNum + admiName}}
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight">
+                        <span class="arrow top"></span>
+                        <li>
+                            <a href="../Home/home.html"><i class="fa fa-home"></i>  首页</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li @click="signOut"><a href="#"><i class="fa fa-sign-out"></i>   退出</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </header>
+        <!-- navbar end   -->
+    </section>
+    <div class="container">
+        <div class="row">
+            <div class="UserMsg">
+                <header>
+                    <i class="fa fa-cog"></i>
+                    <h3>用户信息设置</h3>
+                </header>
+                <div class="UserMsgForm">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation"  class="active">
+                            <a href="#PersonMsg" aria-controls="PersonMsg" role="tab" data-toggle="tab">个人资料</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" style="margin-top: 20px">
+                        <div role="tabpanel" class="tab-pane active">
+                            <el-form ref="form" :inline="true" :model="PersonMsgData" label-width="120px">
+                                <el-form-item label="头像" style="display: block">
+                                    <el-upload
+                                            class="avatar-uploader"
+                                            action="#"
+                                            :show-file-list="false"
+                                            :on-success="handleAvatarSuccess"
+                                            :before-upload="beforeAvatarUpload">
+                                        <img :src="imageUrl ? imageUrl : '../images/avatar.jpg'" class="avatarInfo">
+                                        <!--<i class="el-icon-plus avatar-uploader-icon"></i>-->
+                                    </el-upload>
+                                </el-form-item>
+                                <el-form-item label="教工号">
+                                    <el-input v-model="PersonMsgData.usernum" :disabled="true"></el-input>
+                                </el-form-item>
+                                <el-form-item label="姓名">
+                                    <el-input v-model="PersonMsgData.username"></el-input>
+                                </el-form-item>
+                                <el-form-item label="密码">
+                                    <el-input v-model="PersonMsgData.password"></el-input>
+                                </el-form-item>
+                                <el-form-item label="职称">
+                                    <el-input v-model="PersonMsgData.position"></el-input>
+                                </el-form-item>
+                                <el-form-item label="所属学院">
+                                    <el-input v-model="PersonMsgData.college"></el-input>
+                                </el-form-item>
+                                <el-button class="saveBtn" type="danger" @click="updateInfo">保 存</el-button>
+                            </el-form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="../Plug/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../Plug/bootstrap/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../Plug/js/vue.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="../Common/js/global.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    //管理员userId
+    let admiId = window.localStorage.getItem("admiId")
+    let admiToken = window.localStorage.getItem("admiToken")
+    new Vue({
+        el:'#PersonMsg',
+        data:{
+            admiNum:'',//管理员学号
+            admiName:'',//管理员姓名
+            imageUrl: '',
+            PersonMsgData:{college:'',password:'',position:'',usernum:'',username:''} //个人信息对象
+        },
+        mounted() {
+
+            //根据userId获取用户个人信息
+            let perUrl = rootPath + '/getUserInfo?userId=' + admiId
+            axios.get(perUrl,{headers:{'Authorization':admiToken}}).then(res => {
+                console.log(res.data)
+                if(res.data.code === 200){
+                    this.PersonMsgData = res.data.data
+                    this.imageUrl = res.data.data.avatar
+                    this.admiName = res.data.data.username
+                    this.admiNum = res.data.data.usernum
+                }
+            }).catch(error => {
+                console.log(error.data.message)
+            } )
+        },
+        methods:{
+
+            //修改个人信息
+            updateInfo:function (){
+                var updateUrl = rootPath + '/updateAdminInfo'
+
+                let password = this.PersonMsgData.password
+                let position = this.PersonMsgData.position
+                let college = this.PersonMsgData.college
+                let usernum = this.PersonMsgData.usernum
+                let username = this.PersonMsgData.username
+                let img = this.imageUrl
+                 console.log(img)
+
+                if(password === '' || position === '' || college === '' ||
+                    usernum === '' || username === ''){
+                    alert("输入不为空！")
+                    return
+                }
+
+                let checkUsernum = /^\d{10}$/
+                if(!checkUsernum.test(usernum)){
+                    alert('请输入正确格式的教工号！')
+                    return
+                }
+
+                let checkPassword = /^[0-9A-Za-z]{6,}$/
+                if(!checkPassword.test(password)){
+                    alert('密码至少设置6位，可由数字和字母组成')
+                    return
+                }
+
+                var data = new FormData()
+                data.append("avatar",img)
+                data.append("college",college)
+                data.append("id",admiId)
+                data.append("password",password)
+                data.append("position",position)
+                data.append("username",username)
+                data.append("usernum",usernum)
+                axios.put(updateUrl,data,{headers:{
+                    'Authorization':admiToken}
+                }).then(res => {
+                    console.log(res)
+                    if(res.data.code === 200){
+                        this.$message({
+                            message:"修改成功",
+                            type:'success'
+                        })
+                    }else{
+                        console.log(res.data.message)
+                        this.$message({
+                            message: res.data.message,
+                            type:'error'
+                        })
+                    }
+                })
+            },
+
+            //上传头像
+            handleAvatarSuccess(res, file) {
+                //console.log(URL.createObjectURL(file.raw))
+                //let img = URL.createObjectURL(file.raw);
+                //console.log(img)
+                console.log(file)
+                let formData = new FormData()
+                formData.append('file',file.raw)
+                formData.append("userId",admiId)
+
+                let imgRrl = rootPath +  '/uploadImg'
+
+                axios({
+                    method: 'post',
+                    url: imgRrl,
+                    headers: {'Authorization': admiToken},
+                    contentType: 'application/json',
+                    data: formData
+                }).then(res => {
+                    console.log(res)
+                    if(res.data.code === 200){
+
+                        this.imageUrl = res.data.data
+
+                    }else if(res.data.code !== 200){
+                        this.$messae({
+                            type:'info',
+                            message:'图片上传失败！'
+                        })
+                    }
+                }).catch(error => {
+                    console.log(error)
+                    this.$message({
+                        type:'info',
+                        message:'请求失败！'
+                    })
+                })
+            },
+
+            //上传图片大小限制
+            beforeAvatarUpload(file) {
+                const isLt2M = file.size / 1024 / 1024 < 1;
+                if (!isLt2M) {
+                    this.$message.error('上传头像图片大小不能超过 1MB!');
+                }
+                return isLt2M;
+            },
+
+            //退出登录
+            signOut(){
+                let ourUrl = rootPath + '/signOut'
+                axios.get(ourUrl,{headers:{'Authorization': admiToken}}).then(res => {
+                    if(res.data.code === 200){
+                        location.href = '../Login/login.html'
+                    }else{
+                        this.$message({
+                            message:'退出失败',
+                            type:'info'
+                        })
+                    }
+                })
+            },
+        },
+    })
+
+</script>
+</body>
+</html>

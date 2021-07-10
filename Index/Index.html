@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>后台系统-确认信息</title>
+    <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="stylesheet" href="../Plug/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../Common/css/app.v2.css" type="text/css"/>
+    <link rel="stylesheet" href="../Plug/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+<div id="PersonMsg">
+    <section class="vbox">
+        <!--navbar-->
+        <header class="bg-dark dk header navbar navbar-fixed-top navbar-fixed-top-xs">
+            <div class="navbar-header aside-md">
+                <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav">
+                    <i class="fa fa-bars"></i>
+                </a>
+                <a href="#" class="navbar-brand" data-toggle="fullscreen" style="padding:10px 15px;margin-top: 2px">
+                    <img src="../images/logo.png" class="m-r-smv" style="display: inline-block;">
+                    毕设后台管理
+                </a>
+                <a class="btn btn-link visible-xs" data-toggle="dropdown" data-target=".nav-user">
+                    <i class="fa fa-cog"></i>
+                </a>
+            </div>
+
+            <ul class="nav navbar-nav hidden-xs">
+                <!--<li class="dropdown">
+                    <a href="../Home/home.html" class=" dker">
+                        <i class="fa fa-home"></i>
+                        <span class="font-bold">首页</span>
+                    </a>
+                </li>-->
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs nav-user">
+                <li class="dropdown" style="margin-right: 20px">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="thumb-sm avatar pull-left">
+                        <img :src="imageUrl ? imageUrl : '../images/avatar.jpg'" style="width: 35px;height: 35px" />
+                    </span>
+                        {{admiNum + admiName}}
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight">
+                        <span class="arrow top"></span>
+                        <!--<li>
+                            <a href="../Home/home.html"><i class="fa fa-home"></i>  首页</a>
+                        </li>-->
+                        <!--<li class="divider"></li>-->
+                        <li @click="signOut"><a href="#"><i class="fa fa-sign-out"></i>   退出</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </header>
+        <!-- navbar end   -->
+    </section>
+    <div class="container">
+        <div class="row">
+            <div class="UserMsg">
+                <header style="color: #67C23A;text-align: center">
+                    <i class="fa fa-check-circle"></i>
+                    <h3>登录成功！请确认信息</h3>
+                </header>
+                <div class="UserMsgForm">
+                    <div class="tab-content" style="margin-top: 20px">
+                        <el-form ref="form" :inline="true" label-width="120px">
+                            <el-form-item label="学年" style="display: block">
+                                <el-select v-model="value" placeholder="请选择学年">
+                                    <el-option
+                                            v-for="item in options"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                    </el-option>
+                                </el-select>
+                                <el-button type="primary" @click="yearDialog = true">增加学年</el-button>
+                            </el-form-item>
+                            <el-form-item label="学院">
+                                <el-input v-model="college" :disabled="true"></el-input>
+                            </el-form-item>
+                            <el-form-item label="角色">
+                                <el-input v-model="role" :disabled="true"></el-input>
+                            </el-form-item>
+                            <el-button class="saveBtn" type="danger" @click="toHome">确 认</el-button>
+                        </el-form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--弹窗-->
+    <el-dialog
+            title="请输入当前学年"
+            :visible.sync="yearDialog"
+            width="30%"
+            center>
+        <el-form :inline="true" class="demo-form-inline">
+            <el-form-item label="年份">
+                <el-input v-model="year" placeholder="请按格式输入：2020-2021"></el-input>
+            </el-form-item>
+        </el-form>
+
+        <span slot="footer" class="dialog-footer">
+        <el-button @click="yearDialog = false">取 消</el-button>
+        <el-button type="primary" @click="addSemester">确 定</el-button>
+    </span>
+    </el-dialog>
+</div>
+
+
+<script src="../Plug/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../Plug/bootstrap/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../Plug/js/vue.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="../Common/js/global.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    //管理员userId
+    let admiId = window.localStorage.getItem("admiId")
+    let admiToken = window.localStorage.getItem("admiToken")
+    new Vue({
+        el:'#PersonMsg',
+        data:{
+            yearDialog:false,
+            admiNum:'',//管理员学号
+            admiName:'',//管理员姓名
+            imageUrl: '',
+            college:'',
+            role:'教研室主任',
+            options: [],
+            value:'',
+            year:'' //新添加的学年
+        },
+        mounted() {
+
+            //根据userId获取用户个人信息
+            let perUrl = rootPath + '/getUserInfo?userId=' + admiId
+            axios.get(perUrl,{headers:{'Authorization':admiToken}}).then(res => {
+                //console.log(res.data)
+                if(res.data.code === 200){
+                    this.college = res.data.data.college
+                    this.imageUrl = res.data.data.avatar
+                    this.admiName = res.data.data.username
+                    this.admiNum = res.data.data.usernum
+                }
+            }).catch(error => {
+                console.log(error.data.message)
+            })
+
+            //获取学年信息
+            let semesterUrl = rootPath + '/getSemester'
+            axios.get(semesterUrl,{headers:{'Authorization': admiToken}}).then(res => {
+                console.log(res)
+                if(res.data.code === 200){
+                    let semesterList = res.data.data
+                    semesterList.forEach(item => {
+                        let option = {label:'',value:''}
+                        option.label = item.semesterValue
+                        option.value = item.semesterValue
+                        this.options.push(option)
+                    })
+                }else{
+                    console.log(res)
+                }
+
+            })
+        },
+        methods:{
+            //添加学年
+            addSemester(){
+                let inputValue = this.year
+                //console.log(inputValue)
+                let checkInput = /^\d{4}-\d{4}$/
+                if(!checkInput.test(inputValue)){
+                    this.$message({
+                        type: 'info',
+                        message:'请按格式输入年份'
+                    })
+                    return
+                }
+
+                let addUrl = rootPath + '/addSemester?semesterValue=' + inputValue
+                axios.get(addUrl,{headers:{'Authorization': admiToken}}).then(res => {
+                     console.log(res)
+                    if(res.data.code === 200){
+                        this.$message({
+                            type: 'success',
+                            message: '添加成功'
+                        })
+                        this.yearDialog = false
+                    }else{
+                        this.$message({
+                            type: 'info',
+                            message: res.data.message
+                        })
+                    }
+                })
+            },
+            //去首页
+            toHome(){
+                let semester = this.value
+                console.log(semester)
+                if(semester.trim() === ''){
+                    this.$message({
+                        type: 'info',
+                        message: '请选择学年'
+                    })
+                    return
+                }
+                //储存学年信息
+                localStorage.setItem('semester',semester)
+
+                location.href = '../Home/home.html'
+
+            },
+            //退出登录
+            signOut(){
+                let ourUrl = rootPath + '/signOut'
+                axios.get(ourUrl,{headers:{'Authorization': admiToken}}).then(res => {
+                    if(res.data.code === 200){
+                        location.href = '../Login/login.html'
+                    }else{
+                        this.$message({
+                            message:'退出失败',
+                            type:'info'
+                        })
+                    }
+                })
+            },
+        },
+    })
+
+</script>
+</body>
+</html>

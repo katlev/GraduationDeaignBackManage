@@ -1,0 +1,14 @@
+.el-dialog__header{
+    border-bottom: 1px solid #DDDDDD;
+}
+.el-dialog__body{
+    padding:10px 20px;
+}
+.startColor{
+    color: #FFC333;
+    margin-right: 5px;
+    font-size: 20px;
+}
+.score{
+    color: #EE0A24;
+}
